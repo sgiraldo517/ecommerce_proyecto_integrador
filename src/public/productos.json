@@ -1,0 +1,150 @@
+[
+  {
+    "id": 1,
+    "title": "Producto 1",
+    "description": "Este es un producto prueba",
+    "price": 200,
+    "thumbnail": "Sin imagen",
+    "code": "abc123",
+    "stock": 25
+  },
+  {
+    "id": 2,
+    "title": "Producto 2",
+    "description": "Este es un producto prueba",
+    "price": 400,
+    "thumbnail": "Sin imagen",
+    "code": "cfg456",
+    "stock": 78
+  },
+  {
+    "id": 3,
+    "title": "Producto 3",
+    "description": "Este es un producto prueba",
+    "price": 600,
+    "thumbnail": "Sin imagen",
+    "code": "kjl789",
+    "stock": 40
+  },
+  {
+    "id": 4,
+    "title": "Producto 4",
+    "description": "Este es un producto prueba",
+    "price": 100,
+    "thumbnail": "Sin imagen",
+    "code": "qws234",
+    "stock": 35
+  },
+  {
+    "id": 5,
+    "title": "Nueva Tarea Mejorada",
+    "description": "la mejor descripción Mejorada",
+    "price": 500,
+    "thumbnail": "thumbnail-url",
+    "code": "123456",
+    "stock": 20,
+    "category": "test"
+  },
+  {
+    "id": 6,
+    "title": "Producto 6",
+    "description": "Este es un producto prueba",
+    "price": 250,
+    "thumbnail": "Sin imagen",
+    "code": "ert398",
+    "stock": 75
+  },
+  {
+    "id": 7,
+    "title": "Producto 7",
+    "description": "Este es un producto prueba",
+    "price": 330,
+    "thumbnail": "Sin imagen",
+    "code": "bdu765",
+    "stock": 15
+  },
+  {
+    "id": 9,
+    "title": "Producto 9",
+    "description": "Este es un producto prueba",
+    "price": 800,
+    "thumbnail": "Sin imagen",
+    "code": "bjy045",
+    "stock": 45
+  },
+  {
+    "id": 10,
+    "title": "Producto 10",
+    "description": "Este es un producto prueba",
+    "price": 225,
+    "thumbnail": "Sin imagen",
+    "code": "azf436",
+    "stock": 5
+  },
+  {
+    "id": 11,
+    "title": "Nueva Tarea",
+    "description": "la mejor descripción",
+    "code": "sadasdsa",
+    "price": 500,
+    "status": 20,
+    "stock": "test",
+    "category": "thumbnail-url",
+    "thumbnail": null
+  },
+  {
+    "id": 12,
+    "title": "Nueva Tarea",
+    "description": "la mejor descripción",
+    "code": "sadasdsa",
+    "price": 500,
+    "status": true,
+    "stock": 20,
+    "category": "test",
+    "thumbnail": "thumbnail-url"
+  },
+  {
+    "id": 13,
+    "title": "Nueva Tarea",
+    "description": "la mejor descripción",
+    "code": "sadasdsa",
+    "price": 500,
+    "status": true,
+    "stock": 20,
+    "category": "test",
+    "thumbnail": "thumbnail-url"
+  },
+  {
+    "id": 14,
+    "title": "Nueva Tarea",
+    "description": "la mejor descripción",
+    "code": "sadasdsa",
+    "price": 500,
+    "status": true,
+    "stock": 20,
+    "category": "test",
+    "thumbnail": "thumbnail-url"
+  },
+  {
+    "id": 15,
+    "title": "Nueva Tarea",
+    "description": "la mejor descripción",
+    "code": "sadasdsa",
+    "price": 500,
+    "status": true,
+    "stock": 20,
+    "category": "test",
+    "thumbnail": "thumbnail-url"
+  },
+  {
+    "id": 16,
+    "title": "Nueva Tarea",
+    "description": "la mejor descripción",
+    "code": "sadasdsa",
+    "price": 500,
+    "status": true,
+    "stock": 20,
+    "category": "test",
+    "thumbnail": "thumbnail-url"
+  }
+]
