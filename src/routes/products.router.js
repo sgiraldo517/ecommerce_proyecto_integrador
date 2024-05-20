@@ -16,9 +16,22 @@ import productsModel from '../dao/models/products.model.js'
 router.get('/', async(req, res) => {
     try {
         let productos = await productsModel.find()
-        res.send( {result: "sucess", payload: productos} )
+        res.status(200).send( {result: "success", payload: productos} )
     } catch (e) {
         res.status(500).send( "Error al consultar productos " + e.message);
+    }
+})
+
+router.get('/:pid', async(req, res) =>{
+    try {
+        const productoBuscado = await productsModel.findById(req.params.pid);
+        if (!productoBuscado) {
+            res.status(404).send(`Error: El producto con el id ${productId} no existe en la base de datos.`);
+            return; 
+        }
+        res.status(200).send( {result: "success", payload: productoBuscado} )
+    } catch (e) {
+        res.status(500).send( "Error al encontrar producto " + e.message);
     }
 })
 
@@ -30,14 +43,33 @@ router.post('/', async(req, res) => {
             return res.status(400).send( {error: "Error: faltan algunas propiedades del producto obligatorias"} );
         }
         let productoCreado = await productsModel.create({ title, description, code, price, status, stock, category, thumbnail });
-        return res.status(200).send( {result: "sucess", payload: productoCreado} )
+        return res.status(200).send( {result: "success", payload: productoCreado} )
     } catch (e) {
         res.status(500).send("Error al agregar producto: " + e.message);
     }
 })
 
+router.put('/:pid', async(req, res) =>{
+    try {
+        let productId = req.params.pid
+        const newData = req.body;
+        const productoActualizado = await productsModel.findByIdAndUpdate(productId, newData)
+        const resultado = await productsModel.findById(productId)
+        res.status(200).send( {result: "success", payload: resultado} )
+    } catch (e) {
+        res.status(500).send( "Error al actualizar el producto " + e.message);
+    }
+})
 
-
+router.delete('/:pid', async(req, res) =>{
+    try {
+        let productId = req.params.pid
+        const productoEliminado = await productsModel.findByIdAndDelete(productId)
+        res.status(200).send( {result: "success", payload: productoEliminado} )
+    } catch (e) {
+        res.status(500).send( "Error al eliminar el producto " + e.message);
+    }
+})
 
 //! Endpoints FileSystem
 

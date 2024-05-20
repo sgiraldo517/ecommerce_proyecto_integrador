@@ -13,15 +13,20 @@ const PORT = 8080
 //! Importar rutas
 import productsRouter from './routes/products.router.js'
 import cartsRouter from './routes/carts.router.js'
+import messagesRouter from './routes/messages.router.js'
 
 //* Middleware
 app.use(json())
 app.use(urlencoded({ extended: true }))
 
 //! Mongoose connection
-mongoose.connect("mongodb+srv://sofia:PapasFritas2024@cluster0.s2hghwf.mongodb.net/ecommerce?retryWrites=true&w=majority&appName=Cluster0")
-    .then(() => {console.log("Conectado a la base de datos");})
-    .catch(e =>console.error("Error en la conexion", e))
+const environment = async () => { 
+    await mongoose.connect("mongodb+srv://sofia:PapasFritas2024@cluster0.s2hghwf.mongodb.net/ecommerce?retryWrites=true&w=majority&appName=Cluster0")
+        .then(() => {console.log("Conectado a la base de datos");})
+        .catch(e =>console.error("Error en la conexion", e))
+}
+
+environment()
 
 app.use('/api/products/', productsRouter)
 app.use('/api/carts/', cartsRouter)
