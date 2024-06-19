@@ -28,10 +28,6 @@ app.set('views', __dirname + '/views')
 app.set('view engine', 'handlebars')
 app.use(express.static(__dirname + '/public'));
 
-//* Middleware
-app.use(bodyParser.json())
-app.use(bodyParser.urlencoded({ extended: true }))
-
 //! Mongoose connection
 const environment = async () => { 
     await mongoose.connect("mongodb+srv://sofia:PapasFritas2024@cluster0.s2hghwf.mongodb.net/ecommerce?retryWrites=true&w=majority&appName=Cluster0")
@@ -40,6 +36,9 @@ const environment = async () => {
 }
 environment()
 
+//* Middleware
+app.use(bodyParser.json())
+app.use(bodyParser.urlencoded({ extended: true }))
 app.use(session({
     secret: 'secretkey',
     resave: false,
