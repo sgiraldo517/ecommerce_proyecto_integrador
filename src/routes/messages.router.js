@@ -4,20 +4,13 @@ const router = Router()
 //! Import messagesModel
 import messagesModel from '../dao/models/messages.model.js'
 
-router.get('/users', (req, res) => {
-    res.send('Hello users from router')
-})
 
-router.post('/', (req, res) => {
-    res.send('Hello users from router')
-})
-
-router.put('/', (req, res) => {
-    res.send('Hello users from router')
-})
-
-router.delete('/', (req, res) => {
-    res.send('Hello users from router')
+router.get('/', async(req, res) => {
+    try {
+        res.render('chat', {})
+    } catch (e) {
+        res.status(500).send(e.message);
+    }
 })
 
 export default router
