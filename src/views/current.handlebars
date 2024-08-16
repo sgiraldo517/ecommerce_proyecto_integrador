@@ -1,3 +1,16 @@
-<h1>
-    Bienvenido a la tienda! 
+<h1 class="text-center mt-3">
+    Bienvenido a la tienda: {{user.first_name}}! 
 </h1>
+<div class="d-flex justify-content-center align-items-center m-5">
+    <div class="w-50 border rounded-4 p-5">
+        <h2 class="text-center">Perfil de Usuario</h2>
+        <p>Nombre: {{user.first_name}}</p>
+        <p>Apellido: {{user.last_name}}</p>
+        <p>Email: {{user.email}}</p>
+        <p>Edad: {{user.age}}</p>
+        <p>Role: {{user.role}}</p>
+        <form action="/api/sessions/logout" method="POST">
+            <button type="submit" class="btn btn-primary w-100">Cerrar Sesión</button>
+        </form>
+    </div>
+</div>

@@ -4,9 +4,9 @@ import __dirname from '../utils.js';
 const router = Router()
 
 //! Import clase CartManager
-import CartManager from '../dao/cartManager.js';
-const productPathFile = __dirname + './public/carritos.json'
-const cartManager = new CartManager(productPathFile)
+// import CartManager from '../dao/cartManager.js';
+// const productPathFile = __dirname + './public/carritos.json'
+// const cartManager = new CartManager(productPathFile)
 
 //! Import cartsModel
 import cartsModel from '../dao/models/carts.model.js'

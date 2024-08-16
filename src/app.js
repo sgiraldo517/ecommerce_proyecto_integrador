@@ -11,7 +11,7 @@ import __dirname from './utils.js'
 
 
 const app = express()
-// const PORT = 8080
+const PORT = 8080
 // const httpServer = app.listen(PORT, console.log(`Server running on port ${PORT}`));
 // const socketServer = new Server(httpServer)
 
@@ -61,7 +61,6 @@ app.use('/api/sessions', sessionsRouter);
 //     console.log("Cliente conectado") 
 // })
 
-const PORT = 8080;
 
 app.listen(PORT, () => {
     console.log(`Server is running on port ${PORT}`);

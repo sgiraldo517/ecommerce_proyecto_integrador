@@ -1,7 +1,8 @@
 import { Router } from 'express';
-import { isAuthenticated, isNotAuthenticated } from '../middleware/authenticate.js';
+import { isAuthenticated, isNotAuthenticated } from '../middleware/auth.js';
 
 const router = Router()
+
 
 router.get('/login', isNotAuthenticated, (req, res) => {
     res.render('login')
