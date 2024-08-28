@@ -1,0 +1,53 @@
+<div>
+    <nav class="navbar bg-dark border-bottom border-body" data-bs-theme="dark">
+        <ul class="nav nav-underline m-3">
+            <li class="nav-item">
+                <a class="nav-link" href="/current">Ver perfil</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link active" aria-current="page" href="#">Productos</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="/carts">Carrito</a>
+            </li>
+        </ul>
+    </nav>
+    <h1 class="text-center py-4">Products</h1>
+    <div class="container">
+        <div class="row">
+            {{#each products.docs}}
+                <div class="col-md-4 mb-4"> 
+                    <div class="card h-100"> 
+                        <div class="card-body">
+                            <h3><span class="small fst-italic text-black-50">Producto: </span>{{this.title}}</h3>
+                            <p><span class="small fst-italic text-black-50">Descripcion: </span>{{this.description}}</p>
+                            <p><span class="small fst-italic text-black-50">Precio: </span>${{this.price}}</p>
+                            <form action="/api/carts/{{{../cartId}}}/product/{{this._id}}" method="POST">
+                                <button type="submit" class="btn btn-primary">Agregar al carrito</button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            {{/each}}
+        </div>
+    </div>
+    <div>
+        <nav aria-label="Page navigation example">
+            <ul class="pagination justify-content-center">
+                {{#if products.hasPrevPage}}
+                    <li class="page-item">
+                        <a class="page-link" href={{products.prevLink}}>< Anterior</a>
+                    </li>
+                {{/if}}
+                &nbsp;
+                <li class="page-item"><a class="page-link active">{{products.page}}</a></li>
+                &nbsp;
+                {{#if products.hasNextPage}}
+                    <li class="page-item">
+                        <a class="page-link" href={{products.nextLink}}>Siguiente ></a>
+                    </li>
+                {{/if}} 
+            </ul>
+        </nav>
+    </div>
+</div>

@@ -1,5 +1,6 @@
 import { Router } from 'express';
 import passport from 'passport';
+import { userService } from '../../repositories/index.js';
 
 const router = Router();
 
@@ -19,9 +20,8 @@ router.post('/login', passport.authenticate('login', { failureRedirect: 'faillog
             last_name: req.user.last_name,
             email: req.user.email,
             age: req.user.age,
-            rol: req.user.role
+            role: req.user.role
         };
-        console.log(req.session.user)
         res.redirect('/current');
 
     } catch (err) {

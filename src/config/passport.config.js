@@ -1,8 +1,8 @@
 import passport from "passport";
 import local from 'passport-local'
 import GitHubStrategy from "passport-github2"
-import userModel from "../dao/models/user.model.js"
-import { createHash, isValidPassword } from "../utils.js";
+import { isValidPassword } from "../utils.js";
+import { userService } from '../repositories/index.js'
 
 const LocalStrategy = local.Strategy;
 const initializePassport = () => {
@@ -11,14 +11,13 @@ const initializePassport = () => {
         { passReqToCallback: true, usernameField: 'email' }, async(req, username, password, done) => {
             const { first_name, last_name, email, age } = req.body;
             try {
-                let user = await userModel.findOne({ email: username })
+                let user = await userService.getUserByEmail({ email: username })
                 if (user) {
                     console.log('El usuario ya existe')
                     return done(null, false)
                 }
-                const newUser = new userModel({ first_name, last_name, email, age, password: createHash(password) });
-                await newUser.save();
-                return done(null, newUser)
+                let result = await userService.addUser({ first_name, last_name, email, age, password })
+                return done(null, result)
             } catch (err) {
                 return done('Error al registrar usuario: ' + err);
             }
@@ -26,7 +25,20 @@ const initializePassport = () => {
 
     passport.use('login', new LocalStrategy({ usernameField: 'email'}, async(username, password, done) => {
         try {
-            const user = await userModel.findOne({ email: username });
+            if (username === 'admin@gmail.com') {
+                const adminUser = {
+                    email: 'admin@gmail.com',
+                    role: 'admin',
+                    first_name: 'Admin',
+                    last_name: 'User',
+                };
+                if (password === 'adminPassword123') {
+                    return done(null, adminUser);
+                } else {
+                    return done(null, false, { message: 'Incorrect password for admin.' });
+                }
+            }
+            let user = await userService.getUserByEmail({ email: username })
             if(!user) {
                 console.log("Usuario no existe");
                 return done(null, false);
@@ -44,18 +56,9 @@ const initializePassport = () => {
         callbackURL: 'http://localhost:8080/api/sessions/githubcallback'
     }, async (accessToken, refreshToken, profile, done) => {
         try {
-            console.log(profile);
-            console.log(profile._json);
-            let user = await userModel.findOne({ email: profile._json.email })
+            let user = await userService.getUserByEmail({ email: profile._json.email })
             if (!user) {
-                let newUser = {
-                    first_name: profile._json.name,
-                    last_name: '',
-                    age: 18,
-                    email: profile._json.email,
-                    password: ''
-                }
-                let result = await userModel.create(newUser)
+                let result = await userService.createUser({ full_name: profile._json.name, email: profile._json.email })
                 done(null, result)
             } else {
                 done(null, user)
@@ -66,13 +69,31 @@ const initializePassport = () => {
     }))
 
     passport.serializeUser((user, done) => {
-        done(null, user._id)
-    })
-
+        if (user.email === 'admin@gmail.com') {
+            done(null, user.email);  
+        } else {
+            done(null, user._id);  
+        }
+    });
+    
     passport.deserializeUser(async(id, done) => {
-            let user = await userModel.findById(id);
+        try {
+            let user;
+            if (id === 'admin@gmail.com') {
+                user = {
+                    email: 'admin@gmail.com',
+                    role: 'admin',
+                    first_name: 'Admin',
+                    last_name: 'User'
+                };
+            } else {
+                user = await userService.getUserById(id);
+            }
             done(null, user);
-    })
+        } catch (error) {
+            done(error, null);
+        }
+    });
 
 }
 

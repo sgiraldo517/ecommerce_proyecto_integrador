@@ -1,0 +1,54 @@
+<div>
+    <nav class="navbar bg-dark border-bottom border-body" data-bs-theme="dark">
+        <ul class="nav nav-underline m-3">
+            <li class="nav-item">
+                <a class="nav-link" href="/current">Ver perfil</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="/products">Productos</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link active" aria-current="page" href="#">Carrito</a>
+            </li>
+        </ul>
+    </nav>
+    <h1 class="text-center py-4">Carrito</h1>
+    <div class="container">
+        <div class="row">
+            {{#each carts.payload}}
+                <div class="col-md-4 mb-4"> 
+                    <div class="card h-100"> 
+                        <div class="card-body">
+                            <h3><span class="small fst-italic text-black-50">Producto: </span>{{this.product.title}}</h3>
+                            <p><span class="small fst-italic text-black-50">Descripcion: </span>{{this.product.description}}</p>
+                            <p><span class="small fst-italic text-black-50">Precio: </span>${{this.product.price}}</p>
+                            <p><span class="small fst-italic text-black-50">Cantidad: </span>{{this.quantity}}</p>
+                        </div>
+                    </div>
+                </div>
+            {{/each}}
+        </div>
+    </div>
+    <div>
+        <nav aria-label="Page navigation example">
+            <ul class="pagination justify-content-center">
+                {{#if carts.hasPrevPage}}
+                    <li class="page-item">
+                        <a class="page-link" href={{carts.prevLink}}>< Anterior</a>
+                    </li>
+                {{/if}}
+                &nbsp;
+                <li class="page-item"><a class="page-link active">{{carts.page}}</a></li>
+                &nbsp;
+                {{#if carts.hasNextPage}}
+                    <li class="page-item">
+                        <a class="page-link" href={{carts.nextLink}}>Siguiente ></a>
+                    </li>
+                {{/if}} 
+            </ul>
+        </nav>
+    </div>
+    <form action="/api/carts/{{cartId}}/purchase" method="GET">
+        <button type="submit" class="btn btn-primary">Finalizar Compra</button>
+    </form>
+</div>

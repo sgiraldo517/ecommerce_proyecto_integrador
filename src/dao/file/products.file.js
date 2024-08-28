@@ -5,7 +5,7 @@ class ProductManager {
         this.path = path
     }
 
-    async addProduct(title, description, code, price, status = true, stock, category, thumbnail = null) {
+    addProduct = async(title, description, code, price, status = true, stock, category, thumbnail = null) => {
         try {
             let products = await this.traerProductos() 
             const producto_id = products.length + 1
@@ -27,7 +27,7 @@ class ProductManager {
         }
     }  
 
-    async getProducts() {
+    getProducts = async() => {
         try {
             return await this.traerProductos()
         } catch (e) {
@@ -35,7 +35,7 @@ class ProductManager {
         }
     }
 
-    async getProductById(id) {
+    getProductById = async(id) => {
         try {
             let products = await this.traerProductos()
             const producto_buscado = products.find((prod) => prod.id === id)
@@ -45,7 +45,7 @@ class ProductManager {
         }
     }
 
-    async deleteProduct(id) {
+    deleteProduct = async(id) => {
         try {
             let products = await this.traerProductos();
             const index = products.findIndex(product => product.id === id);
@@ -61,7 +61,7 @@ class ProductManager {
         }
     }
 
-    async updateProduct(id, newData) {
+    updateProduct = async(id, newData) => {
         try {
             let products = await this.traerProductos();
             const index = products.findIndex(product => product.id === id);
@@ -77,7 +77,7 @@ class ProductManager {
         }
     }
 
-    async traerProductos() {
+    traerProductos= async() => {
             try {
                 const datos = await fs.readFile(this.path, 'utf8')
                 return JSON.parse(datos)

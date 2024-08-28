@@ -1,14 +1,27 @@
+<nav class="navbar bg-dark border-bottom border-body" data-bs-theme="dark">
+    <ul class="nav nav-underline m-3">
+        <li class="nav-item">
+            <a class="nav-link active" aria-current="page" href="#">Ver perfil</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" href="/products">Productos</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" href="/carts">Carrito</a>
+        </li>
+    </ul>
+</nav>
 <h1 class="text-center mt-3">
-    Bienvenido a la tienda: {{user.first_name}}! 
+    Bienvenido a la tienda: {{currentUser.first_name}}! 
 </h1>
 <div class="d-flex justify-content-center align-items-center m-5">
     <div class="w-50 border rounded-4 p-5">
         <h2 class="text-center">Perfil de Usuario</h2>
-        <p>Nombre: {{user.first_name}}</p>
-        <p>Apellido: {{user.last_name}}</p>
-        <p>Email: {{user.email}}</p>
-        <p>Edad: {{user.age}}</p>
-        <p>Role: {{user.role}}</p>
+        <p>Nombre: {{currentUser.first_name}}</p>
+        <p>Apellido: {{currentUser.last_name}}</p>
+        <p>Email: {{currentUser.email}}</p>
+        <p>Edad: {{currentUser.age}}</p>
+        <p>Role: {{currentUser.role}}</p>
         <form action="/api/sessions/logout" method="POST">
             <button type="submit" class="btn btn-primary w-100">Cerrar Sesión</button>
         </form>
