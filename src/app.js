@@ -9,6 +9,7 @@ import session from 'express-session';
 import initializePassport  from './config/passport.config.js';
 import __dirname from './utils.js'
 import dotenv from 'dotenv'
+import errorHandler from './middleware/errors/index.js'
 
 dotenv.config()
 
@@ -49,6 +50,7 @@ app.use('/api/carts/', cartsRouter)
 app.use('/', messagesRouter)
 app.use('/', viewsRouter)
 app.use('/api/sessions', sessionsRouter);
+app.use(errorHandler)
 
 //* Websocket
 // socketServer.on('connection', async(socketClient) => {

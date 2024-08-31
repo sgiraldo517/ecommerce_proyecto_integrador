@@ -37,6 +37,11 @@ class ProductsRepositories{
         return result
     }
 
+    getrecentlyadded = async () => {
+        let result = await this.dao.getrecentlyadded()
+        return result
+    }
+
 }
 
 export default ProductsRepositories

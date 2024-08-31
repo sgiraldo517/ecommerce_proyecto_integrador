@@ -1,6 +1,6 @@
 import { Router } from 'express';
 import { userService } from '../repositories/index.js';
-import { isAuthenticated, isNotAuthenticated, isUser } from '../middleware/auth.js';
+import { isAuthenticated, isNotAuthenticated, isUser, isAdmin } from '../middleware/auth.js';
 import productsControllers from '../controllers/products.controllers.js'
 import cartsControllers from '../controllers/carts.controllers.js'
 
@@ -27,12 +27,20 @@ router.get('/products', isAuthenticated, isUser, async (req, res) => {
     res.render('products',  { products, cartId: currentCart });
 });
 
+router.get('/addproduct', isAuthenticated, isAdmin, async (req, res) => {
+    const productoReciente = await productsControllers.recentlyAdded()
+    console.log(productoReciente);
+    res.render('addproduct', productoReciente);
+});
+
 router.get('/carts', isAuthenticated, isUser, async (req, res) => {
     const carts = await cartsControllers.paginateCart(req, res);
     const currentUser = await userService.getUserByEmail(req.session.user)
     const currentCart = await userService.getUserCarrito(currentUser._id)
     res.render('carts',  { carts, cartId: currentCart} );
 });
+
+router.get('/mockingproducts', productsControllers.generateMockingProducts)
 
 
 

@@ -1,4 +1,8 @@
 import { productsService } from "../repositories/index.js";
+import { generateProducts } from "../utils.js";
+import CustomError from '../services/errors/CustomError.js'
+import EErrors from "../services/errors/enums.js";
+import { generateProductErrorMessage } from "../services/errors/info.js";
 
 const getProducts = async (req, res) => {
     try {
@@ -23,16 +27,22 @@ const findProductById = async(req, res) =>{
     }
 }
 
-const createProduct = async (req, res) => {
+const createProduct = async (req, res, next) => {
     try {
         let { title, description, code, price, status, stock, category, thumbnail } = req.body;
         if (!title || !description || !code || !price || !stock || !category) {
-            return res.status(400).send( {error: "Error: faltan algunas propiedades del producto obligatorias"} );
+            const errorMessage = generateProductErrorMessage(req.body);
+            CustomError.createError({
+                name: 'InvalidProductData',
+                cause: new Error(errorMessage),
+                message: 'Product data is invalid',
+                code: EErrors.INVALID_TYPES_ERROR
+            });
         }
         let result = await productsService.addProduct({ title, description, code, price, status, stock, category, thumbnail });
         return res.status(200).send( {result: "success", payload: result} )
     } catch (e) {
-        res.status(500).send("Error al agregar producto: " + e.message);
+        next(e);
     }
 }
 
@@ -81,6 +91,23 @@ const paginateProducts = async(req, res) => {
     }
 }
 
+const recentlyAdded = async (req, res) => {
+    try {
+        let result = await productsService.getrecentlyadded()
+        return result
+    } catch (error) {
+        console.error(error)
+    }
+}
+
+const generateMockingProducts = async (req, res) => {
+    let products = []
+    for (let index = 0; index < 50; index++) {
+        products.push(generateProducts());
+    }
+    return res.status(200).json({ status: 'success', payload: products})
+}
+
 
 export default {
     getProducts,
@@ -88,5 +115,7 @@ export default {
     createProduct,
     updateProduct,
     deleteProduct,
-    paginateProducts
+    paginateProducts,
+    recentlyAdded,
+    generateMockingProducts
 }

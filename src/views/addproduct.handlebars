@@ -1,0 +1,61 @@
+<div>
+    <nav class="navbar bg-dark border-bottom border-body" data-bs-theme="dark">
+        <ul class="nav nav-underline m-3">
+            <li class="nav-item">
+                <a class="nav-link" href="/current">Ver perfil</a>
+            </li>
+        </ul>
+    </nav>
+    <section class="d-flex flex-column justify-content-center align-items-center">
+        <h1 class="m-3 text-center">Agregar producto</h1>
+        <div class="d-flex justify-content-center align-items-center border rounded-4 p-5 w-50">
+            <form action="/api/products/" method="POST" class="w-75">
+                <label for="title" class="form-label">Title:</label>
+                <input type="text" class="form-control" name="title" >
+
+                <label for="description" class="form-label">Description:</label>
+                <input type="text" class="form-control" name="description" >
+
+                <label for="code" class="form-label">Code:</label>
+                <input type="text" class="form-control" name="code" >
+
+                <label for="price" class="form-label">Price:</label>
+                <input type="number" class="form-control" name="price" min="0" >
+                
+                <label for="stock" class="form-label">Stock:</label>
+                <input type="number" class="form-control" name="stock" min="0" >
+
+                <label for="category" class="form-label">Category:</label>
+                <input type="text" class="form-control" name="category" >
+                
+                
+                <label for="thumbnail" class="form-label">Thumbnail:</label>
+                <input type="file" class="form-control" name="thumbnail" accept="image/*">
+
+                <button type="submit" class="btn btn-primary mt-3 w-100">Agregar Producto</button>
+            </form>
+        </div>
+    </section>
+    <section class="d-flex flex-column justify-content-center align-items-center m-5">
+        <h2 class="text-center mb-3">Agregado Recientemente</h2>
+        <div >
+            <div class="row">
+                {{productoReciente}}
+                    <div> 
+                        <div class="card h-100"> 
+                            <div class="card-body">
+                                <h3><span class="small fst-italic text-black-50">Title: </span>{{this.title}}</h3>
+                                <p><span class="small fst-italic text-black-50">Descripcion: </span>{{this.description}}</p>
+                                <p><span class="small fst-italic text-black-50">Code: </span>{{this.code}}</p>
+                                <p><span class="small fst-italic text-black-50">Precio: </span>${{this.price}}</p>
+                                <p><span class="small fst-italic text-black-50">Status: </span>{{this.status}}</p>
+                                <p><span class="small fst-italic text-black-50">Stock: </span>{{this.stock}}</p>
+                                <p><span class="small fst-italic text-black-50">Category: </span>{{this.category}}</p>
+                                <p><span class="small fst-italic text-black-50">Thumbnail: </span>{{this.thumbnail}}</p>
+                            </div>
+                        </div>
+                    </div>
+            </div>
+        </div>
+    </section>
+</div>

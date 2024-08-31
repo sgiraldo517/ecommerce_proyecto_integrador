@@ -38,6 +38,11 @@ class Products {
         return paginatedProductos
     }
 
+    getrecentlyadded = async () => {
+        const recentProduct = await productsModel.findOne().sort({ _id: -1 }).exec();
+        return recentProduct;
+    }
+
 }
 
 export default Products

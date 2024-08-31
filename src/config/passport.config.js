@@ -32,7 +32,7 @@ const initializePassport = () => {
                     first_name: 'Admin',
                     last_name: 'User',
                 };
-                if (password === 'adminPassword123') {
+                if (password === 'admincontraseña') {
                     return done(null, adminUser);
                 } else {
                     return done(null, false, { message: 'Incorrect password for admin.' });
