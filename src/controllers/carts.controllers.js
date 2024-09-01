@@ -2,12 +2,14 @@ import { cartsService } from "../repositories/index.js";
 import { userService } from "../repositories/index.js";
 import { productsService } from "../repositories/index.js"
 import { ticketsService } from "../repositories/index.js";
+import logger from '../utils/logger.js';
 
 const createCart = async(req, res) => {
     try {
         let result = await cartsService.addCart()
         return res.status(200).send({result: "success", payload: result})
     } catch (e) {
+        logger.error("Error adding product to cart:", e);
         res.status(500).send("Error al agregar producto: " + e.message);
     }
 }
@@ -18,11 +20,14 @@ const addProductToCart = async (req, res) => {
     try {
         let cart = await cartsService.getCartById(cartId);
         if (!cart) {
+            logger.warn(`Cart not found for ID: ${cartId}`);
             return res.status(404).send({ result: "failure", message: "Carrito no encontrado" });
         }
         let result = await cartsService.addProductToCart(cart, productId)
+        logger.info(`Product ${productId} added successfullyto cart: ${cartId}`)
         return res.status(200).send({ result: "success", payload: result });
     } catch (e) {
+        logger.error("Error updating cart:", e);
         res.status(500).send("Error updating cart: " + e.message);
     }
 }
@@ -32,11 +37,13 @@ const findCart = async(req, res) =>{
         let cartId = req.params.cid
         let result = cartsService.getCartById(cartId)
         if (!result) {
+            logger.warn(`Cart not found for ID: ${cartId}`);
             res.status(404).send({ result: "failure", message: "Carrito no encontrado" });
             return; 
         }
         res.status(200).send( {result: "success", payload: result} )
     } catch (e) {
+        logger.error("Error finding cart:", e);
         res.status(500).send( "Error al encontrar carrito " + e.message);
     }
 }
@@ -45,6 +52,7 @@ const paginateCart = async(req, res) => {
     const currentUser = await userService.getUserByEmail(req.session.user)
     const cartId = await userService.getUserCarrito(currentUser._id);
     if (!cartId) {
+        logger.warn("No active cart found for user")
         return res.status(404).json({ status: 'error', message: 'No active cart found for user' });
     }
     try {
@@ -54,6 +62,7 @@ const paginateCart = async(req, res) => {
         const carritoBuscado = await cartsService.getProductsByCartId(cartId);
         
         if (!carritoBuscado) {
+            logger.warn(`Cart not found for ID: ${cartId}`);
             return res.status(404).json({ status: 'error', message: 'Carrito no encontrado' });
         }
         let productosCarrito = carritoBuscado.products
@@ -72,6 +81,7 @@ const paginateCart = async(req, res) => {
         };
         return result
     } catch (e) {
+        logger.error("Error paginating cart:", e);
         res.status(500).json({ status: 'error', payload: e.message });
     }
 }
@@ -83,6 +93,7 @@ const endPurchase = async (req, res) => {
         const purchaser = currentUser.email
 
         if (!cartId) {
+            logger.warn("Cart not found for purchase");
             res.status(404).send({ result: "failure", message: "Carrito no encontrado" });
             return;
         }
@@ -106,18 +117,22 @@ const endPurchase = async (req, res) => {
                 let cart = await cartsService.getCartById(cartId)
                 await cartsService.deleteProductFromCart(cart, productId)
             } else {
+                logger.info(`Product ID: ${productId} could not be processed due to insufficient stock.`);
                 unprocessedProducts.push(productId)
             }
         }
 
         await ticketsService.createNewTicket({ code: code, amount: amount, purchaser: purchaser })
         if(unprocessedProducts.length > 0) {
+            logger.info("Purchase completed with some items unprocessed due to insufficient stock");
             res.status(200).json({ result: "success", message: "Some items were not processed due to missing stock " + unprocessedProducts });
         } else {
+            logger.info("Purchase completed successfully");
             res.status(200).json({ result: "success", message: "Purchase completed successfully" });
         }
 
     } catch (e) {
+        logger.error("Error processing purchase:", e);
         res.status(500).send("Error al procesar la compra: " + e.message);
     }
 };

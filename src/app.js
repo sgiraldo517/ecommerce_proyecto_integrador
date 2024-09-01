@@ -10,6 +10,7 @@ import initializePassport  from './config/passport.config.js';
 import __dirname from './utils.js'
 import dotenv from 'dotenv'
 import errorHandler from './middleware/errors/index.js'
+import logger from './utils/logger.js';
 
 dotenv.config()
 
@@ -45,12 +46,14 @@ initializePassport()
 app.use(passport.initialize())
 app.use(passport.session())
 
+app.use(errorHandler)
+
 app.use('/api/products/', productsRouter)
 app.use('/api/carts/', cartsRouter)
 app.use('/', messagesRouter)
 app.use('/', viewsRouter)
 app.use('/api/sessions', sessionsRouter);
-app.use(errorHandler)
+
 
 //* Websocket
 // socketServer.on('connection', async(socketClient) => {
@@ -59,6 +62,6 @@ app.use(errorHandler)
 
 
 app.listen(PORT, () => {
-    console.log(`Server is running on port ${PORT}`);
+    logger.info(`Server is running on port ${PORT}`);
 });
 

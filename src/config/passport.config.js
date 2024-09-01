@@ -1,54 +1,66 @@
 import passport from "passport";
-import local from 'passport-local'
-import GitHubStrategy from "passport-github2"
+import local from 'passport-local';
+import GitHubStrategy from "passport-github2";
 import { isValidPassword } from "../utils.js";
-import { userService } from '../repositories/index.js'
+import { userService } from '../repositories/index.js';
+import logger from '../utils/logger.js'; 
 
 const LocalStrategy = local.Strategy;
-const initializePassport = () => {
 
+const initializePassport = () => {
     passport.use('register', new LocalStrategy(
-        { passReqToCallback: true, usernameField: 'email' }, async(req, username, password, done) => {
+        { passReqToCallback: true, usernameField: 'email' }, 
+        async (req, username, password, done) => {
             const { first_name, last_name, email, age } = req.body;
             try {
-                let user = await userService.getUserByEmail({ email: username })
+                let user = await userService.getUserByEmail({ email: username });
                 if (user) {
-                    console.log('El usuario ya existe')
-                    return done(null, false)
+                    logger.warn('User already exists');
+                    return done(null, false);
                 }
-                let result = await userService.addUser({ first_name, last_name, email, age, password })
-                return done(null, result)
+                let result = await userService.addUser({ first_name, last_name, email, age, password });
+                return done(null, result);
             } catch (err) {
-                return done('Error al registrar usuario: ' + err);
+                logger.error('Error registering user:', err);
+                return done('Error registering user: ' + err);
             }
-    }))
-
-    passport.use('login', new LocalStrategy({ usernameField: 'email'}, async(username, password, done) => {
-        try {
-            if (username === 'admin@gmail.com') {
-                const adminUser = {
-                    email: 'admin@gmail.com',
-                    role: 'admin',
-                    first_name: 'Admin',
-                    last_name: 'User',
-                };
-                if (password === 'admincontraseña') {
-                    return done(null, adminUser);
-                } else {
-                    return done(null, false, { message: 'Incorrect password for admin.' });
-                }
-            }
-            let user = await userService.getUserByEmail({ email: username })
-            if(!user) {
-                console.log("Usuario no existe");
-                return done(null, false);
-            }
-            if(!isValidPassword(user, password)) return done(null, false);
-            return done(null, user)
-        } catch (error) {
-            return done(error)
         }
-    }));
+    ));
+
+    passport.use('login', new LocalStrategy(
+        { usernameField: 'email' }, 
+        async (username, password, done) => {
+            try {
+                if (username === 'admin@gmail.com') {
+                    const adminUser = {
+                        email: 'admin@gmail.com',
+                        role: 'admin',
+                        first_name: 'Admin',
+                        last_name: 'User',
+                    };
+                    if (password === 'admincontraseña') {
+                        return done(null, adminUser);
+                    } else {
+                        logger.warn('Incorrect password for admin.');
+                        return done(null, false, { message: 'Incorrect password for admin.' });
+                    }
+                }
+                let user = await userService.getUserByEmail({ email: username });
+                if (!user) {
+                    logger.warn('User does not exist');
+                    return done(null, false);
+                }
+                if (!isValidPassword(user, password)) {
+                    logger.warn('Invalid password');
+                    return done(null, false);
+                }
+                return done(null, user);
+            } catch (error) {
+                logger.error('Error during login:', error);
+                return done(error);
+            }
+        }
+    ));
 
     passport.use('github', new GitHubStrategy({
         clientID: 'Iv23lifl6cZGRp9dfGNI',
@@ -56,17 +68,20 @@ const initializePassport = () => {
         callbackURL: 'http://localhost:8080/api/sessions/githubcallback'
     }, async (accessToken, refreshToken, profile, done) => {
         try {
-            let user = await userService.getUserByEmail({ email: profile._json.email })
+            let user = await userService.getUserByEmail({ email: profile._json.email });
             if (!user) {
-                let result = await userService.createUser({ full_name: profile._json.name, email: profile._json.email })
-                done(null, result)
+                let result = await userService.createUser({ full_name: profile._json.name, email: profile._json.email });
+                logger.info('User created from GitHub profile');
+                done(null, result);
             } else {
-                done(null, user)
+                logger.info('User found from GitHub profile');
+                done(null, user);
             }
         } catch (error) {
-            return done(error)
+            logger.error('Error during GitHub login:', error);
+            return done(error);
         }
-    }))
+    }));
 
     passport.serializeUser((user, done) => {
         if (user.email === 'admin@gmail.com') {
@@ -75,8 +90,8 @@ const initializePassport = () => {
             done(null, user._id);  
         }
     });
-    
-    passport.deserializeUser(async(id, done) => {
+
+    passport.deserializeUser(async (id, done) => {
         try {
             let user;
             if (id === 'admin@gmail.com') {
@@ -91,11 +106,10 @@ const initializePassport = () => {
             }
             done(null, user);
         } catch (error) {
+            logger.error('Error during deserialization:', error);
             done(error, null);
         }
     });
-
 }
 
 export default initializePassport;
-
