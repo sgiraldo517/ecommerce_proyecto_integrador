@@ -1,6 +1,6 @@
 import { Router } from 'express';
-import __dirname from '../utils.js';
-import { isAuthenticated, isAdmin } from '../middleware/auth.js';
+import __dirname from '../utils/dirname.js';
+import { isAuthenticated, isAdminOrPremium } from '../middleware/auth.js';
 const router = Router()
 
 //! Import Controllers
@@ -12,11 +12,11 @@ router.get('/', productsControllers.getProducts)
 
 router.get('/:pid', productsControllers.findProductById)
 
-router.post('/', isAuthenticated, isAdmin, productsControllers.createProduct)
+router.post('/', isAuthenticated, isAdminOrPremium, productsControllers.createProduct)
 
-router.put('/:pid', isAuthenticated, isAdmin, productsControllers.updateProduct)
+router.put('/:pid', isAuthenticated, isAdminOrPremium, productsControllers.updateProduct)
 
-router.delete('/:pid', isAuthenticated, isAdmin, productsControllers.deleteProduct)
+router.delete('/:pid', isAuthenticated, isAdminOrPremium, productsControllers.deleteProduct)
 
 
 

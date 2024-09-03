@@ -32,29 +32,30 @@
                 <label for="thumbnail" class="form-label">Thumbnail:</label>
                 <input type="file" class="form-control" name="thumbnail" accept="image/*">
 
+                <input type="hidden" name="email" value="{{email}}">
+
                 <button type="submit" class="btn btn-primary mt-3 w-100">Agregar Producto</button>
             </form>
         </div>
     </section>
     <section class="d-flex flex-column justify-content-center align-items-center m-5">
         <h2 class="text-center mb-3">Agregado Recientemente</h2>
-        <div >
+        <div>
             <div class="row">
-                {{productoReciente}}
-                    <div> 
-                        <div class="card h-100"> 
-                            <div class="card-body">
-                                <h3><span class="small fst-italic text-black-50">Title: </span>{{this.title}}</h3>
-                                <p><span class="small fst-italic text-black-50">Descripcion: </span>{{this.description}}</p>
-                                <p><span class="small fst-italic text-black-50">Code: </span>{{this.code}}</p>
-                                <p><span class="small fst-italic text-black-50">Precio: </span>${{this.price}}</p>
-                                <p><span class="small fst-italic text-black-50">Status: </span>{{this.status}}</p>
-                                <p><span class="small fst-italic text-black-50">Stock: </span>{{this.stock}}</p>
-                                <p><span class="small fst-italic text-black-50">Category: </span>{{this.category}}</p>
-                                <p><span class="small fst-italic text-black-50">Thumbnail: </span>{{this.thumbnail}}</p>
-                            </div>
+                <div>
+                    <div class="card h-100">
+                        <div class="card-body">
+                            <h3><span class="small fst-italic text-black-50">Title: </span>{{productoReciente.title}}</h3>
+                            <p><span class="small fst-italic text-black-50">Descripcion: </span>{{productoReciente.description}}</p>
+                            <p><span class="small fst-italic text-black-50">Code: </span>{{productoReciente.code}}</p>
+                            <p><span class="small fst-italic text-black-50">Precio: </span>${{productoReciente.price}}</p>
+                            <p><span class="small fst-italic text-black-50">Status: </span>{{productoReciente.status}}</p>
+                            <p><span class="small fst-italic text-black-50">Stock: </span>{{productoReciente.stock}}</p>
+                            <p><span class="small fst-italic text-black-50">Category: </span>{{productoReciente.category}}</p>
+                            <p><span class="small fst-italic text-black-50">Thumbnail: </span>{{productoReciente.thumbnail}}</p>
                         </div>
                     </div>
+                </div>
             </div>
         </div>
     </section>

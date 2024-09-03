@@ -1,0 +1,32 @@
+<div>
+    <nav class="navbar bg-dark border-bottom border-body" data-bs-theme="dark">
+        <ul class="nav nav-underline m-3">
+            <li class="nav-item">
+                <a class="nav-link" href="/current">Ver perfil</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="/products">Productos</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="/carts">Carrito</a>
+            </li>
+        </ul>
+    </nav>
+    <h1 class="text-center py-4">Administrar Productos</h1>
+    <div class="container">
+        <div class="row">
+            {{#each products}}
+                <div class="col-md-4 mb-4"> 
+                    <div class="card h-100"> 
+                        <div class="card-body">
+                            <h3><span class="small fst-italic text-black-50">Producto: </span>{{this.title}}</h3>
+                            <p><span class="small fst-italic text-black-50">Descripcion: </span>{{this.description}}</p>
+                            <p><span class="small fst-italic text-black-50">Precio: </span>${{this.price}}</p>
+                            <button class="btn btn-danger" onclick="deleteProduct('{{this._id}}')">Eliminar Producto</button>
+                        </div>
+                    </div>
+                </div>
+            {{/each}}
+        </div>
+    </div>
+</div>

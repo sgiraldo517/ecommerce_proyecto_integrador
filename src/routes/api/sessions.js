@@ -2,6 +2,11 @@ import { Router } from 'express';
 import passport from 'passport';
 import { userService } from '../../repositories/index.js';
 import logger from '../../utils/logger.js';
+import dotenv from 'dotenv'
+import jwt from 'jsonwebtoken'
+import { createHash, isValidPassword } from '../../utils/password.js';
+
+dotenv.config()
 
 const router = Router();
 
@@ -63,6 +68,36 @@ router.post('/logout', (req, res) => {
         }
         res.redirect('/login');
     });
+});
+
+router.post('/reset-password', async (req, res) => {
+    const { token, email, newPassword, confirmPassword } = req.body;
+    const secret = process.env.JWT_SECRET;
+    logger.info('Token received:', token)
+    try {
+        const decoded = jwt.verify(token, secret);
+        logger.info('Verified token:', decoded)
+        if (newPassword !== confirmPassword) {
+            logger.error('Passwords do not match')
+            return res.status(400).json({ status: "error", message: "Passwords do not match" });
+        } 
+        const user = await userService.getUserByEmail({ email });
+        if (!user) {
+            logger.error(`User ${email} does not exist`)
+            return res.status(404).json({ status: "error", message: "User not found" });
+        }
+        if (isValidPassword( user, newPassword)) {
+            logger.warn('Invalid password: Password has been used previously');
+            return res.status(400).json({ status: "error", message: "Invalid password: Password has been used previously" })
+        }
+        user.password = createHash(newPassword); 
+        await user.save();
+        logger.info('Password updated successfully')
+        res.redirect('/login')
+    } catch (err) {
+        logger.error({ message: 'Invalid or expired token' + err.message })
+        res.redirect('/reset')
+    }
 });
 
 export default router;

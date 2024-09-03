@@ -40,6 +40,11 @@ class UserRepositories{
         return result
     }
 
+    updateUserRole = async (user, role) => {
+        let result = await this.dao.updateUserRole(user, role)
+        return result
+    }
+
 }
 
 export default UserRepositories

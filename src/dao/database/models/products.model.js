@@ -11,9 +11,19 @@ const productSchema = new mongoose.Schema({
     status: {type: Boolean, default: true},
     stock: {type: Number, required: true},
     category: {type: String, required: true},
-    thumbnail: {type: String}
+    thumbnail: {type: String},
+    owner: {
+        user: {
+            type: mongoose.Schema.ObjectId,
+            ref: 'User',
+            default: null,
+        },
+        admin: {
+            type: Boolean,
+            default: false
+        }
     }
-)
+})
 
 productSchema.plugin(mongoosePaginate);
 const productsModel = mongoose.model(productsCollection, productSchema)

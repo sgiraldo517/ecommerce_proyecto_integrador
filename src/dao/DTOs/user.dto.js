@@ -1,4 +1,4 @@
-import { createHash } from "../../utils.js";
+import { createHash } from "../../utils/password.js";
 
 class UsersDTO {
     constructor(user) {

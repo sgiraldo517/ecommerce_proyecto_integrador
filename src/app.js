@@ -7,10 +7,11 @@ import MongoStore from 'connect-mongo';
 import passport from 'passport';
 import session from 'express-session';
 import initializePassport  from './config/passport.config.js';
-import __dirname from './utils.js'
+import __dirname from './utils/dirname.js'
 import dotenv from 'dotenv'
 import errorHandler from './middleware/errors/index.js'
 import logger from './utils/logger.js';
+import path from 'path';
 
 dotenv.config()
 
@@ -25,15 +26,18 @@ import cartsRouter from './routes/carts.router.js'
 import messagesRouter from './routes/messages.router.js'
 import viewsRouter from './routes/views.router.js'
 import sessionsRouter from './routes/api/sessions.js'
+import mailRouter from './routes/mail.router.js'
+import usersRouter from './routes/users.router.js'
 
 //* Inicializacion del motor
 app.engine('handlebars', handlebars.engine())
-app.set('views', __dirname + '/views')
+app.set('views', path.join(__dirname, '../views'));
 app.set('view engine', 'handlebars')
-app.use(express.static(__dirname + '/public'));
+app.use(express.static(path.join(__dirname, '../public')));
 
 //* Middleware
 app.use(bodyParser.json())
+app.use(express.json());
 app.use(bodyParser.urlencoded({ extended: true }))
 app.use(session({
     secret: 'secretkey',
@@ -53,7 +57,8 @@ app.use('/api/carts/', cartsRouter)
 app.use('/', messagesRouter)
 app.use('/', viewsRouter)
 app.use('/api/sessions', sessionsRouter);
-
+app.use('/', mailRouter)
+app.use('/api/users', usersRouter);
 
 //* Websocket
 // socketServer.on('connection', async(socketClient) => {

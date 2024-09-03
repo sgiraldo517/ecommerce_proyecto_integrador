@@ -1,7 +1,7 @@
 import passport from "passport";
 import local from 'passport-local';
 import GitHubStrategy from "passport-github2";
-import { isValidPassword } from "../utils.js";
+import { isValidPassword } from "../utils/password.js";
 import { userService } from '../repositories/index.js';
 import logger from '../utils/logger.js'; 
 

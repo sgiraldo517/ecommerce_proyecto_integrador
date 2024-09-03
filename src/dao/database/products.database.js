@@ -6,7 +6,7 @@ class Products {
 
     }
     getProducts = async () => {
-        const productos = await productsModel.find()
+        const productos = await productsModel.find().lean()
         return productos
     }
 
@@ -39,9 +39,14 @@ class Products {
     }
 
     getrecentlyadded = async () => {
-        const recentProduct = await productsModel.findOne().sort({ _id: -1 }).exec();
+        const recentProduct = await productsModel.findOne().sort({ _id: -1 }).lean();
         return recentProduct;
     }
+
+    findProductsByOwnerId = async (userId) => {
+            const products = await productsModel.find({ 'owner.user': userId }).lean();
+            return products;
+    };
 
 }
 

@@ -1,5 +1,6 @@
 //! Import DTOs
 import ProductsDTO from '../dao/DTOs/products.dto.js'
+import { userService } from "../repositories/index.js";
 
 class ProductsRepositories{
     constructor(dao) {
@@ -16,8 +17,11 @@ class ProductsRepositories{
         return result
     }
 
-    addProduct = async ({ title, description, code, price, status, stock, category, thumbnail }) => {
+    addProduct = async ({ title, description, code, price, status, stock, category, thumbnail, email }) => {
+        const user = await userService.getUserByEmail({ email } )
+        const owner = user ? { user: user._id } : { admin: true };
         let newProduct = new ProductsDTO({ title, description, code, price, status, stock, category, thumbnail })
+        newProduct.owner = owner
         let result = await this.dao.addProduct(newProduct)
         return result
     }
@@ -41,6 +45,11 @@ class ProductsRepositories{
         let result = await this.dao.getrecentlyadded()
         return result
     }
+
+    findProductsByOwnerId = async (userId) => {
+        const result = await this.dao.findProductsByOwnerId(userId);
+        return result;
+}; 
 
 }
 

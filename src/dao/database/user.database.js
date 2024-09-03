@@ -1,4 +1,4 @@
-import { createHash } from "../../utils.js";
+import { createHash } from "../../utils/password.js";
 import { cartsService } from "../../repositories/index.js";
 //! Import Models
 import userModel from '../database/models/user.model.js'
@@ -39,6 +39,11 @@ class Users {
         const cartid = user.carts[0].cart.toString();
         return cartid
     };
+
+    updateUserRole = async (userId, role) => {
+        const updatedProduct = await userModel.findByIdAndUpdate(userId, { role: role })
+        return updatedProduct
+    }
 
 }
 

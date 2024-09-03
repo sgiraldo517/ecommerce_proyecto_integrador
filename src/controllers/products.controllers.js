@@ -1,5 +1,5 @@
 import { productsService } from "../repositories/index.js";
-import { generateProducts } from "../utils.js";
+import { generateProducts } from "../utils/mocking.js";
 import CustomError from '../services/errors/CustomError.js'
 import EErrors from "../services/errors/enums.js";
 import { generateProductErrorMessage } from "../services/errors/info.js";
@@ -9,7 +9,7 @@ const getProducts = async (req, res) => {
     try {
         let result = await productsService.getProducts()
         logger.info('Fetched all products successfully.');
-        res.status(200).send( {result: "success", payload: result} )
+        return result
     } catch (e) {
         logger.error('Error al consultar productos:', e);
         res.status(500).send( "Error al consultar productos " + e.message);
@@ -35,7 +35,7 @@ const findProductById = async(req, res) =>{
 
 const createProduct = async (req, res, next) => {
     try {
-        let { title, description, code, price, status, stock, category, thumbnail } = req.body;
+        let { title, description, code, price, status, stock, category, thumbnail, email } = req.body;
         if (!title || !description || !code || !price || !stock || !category) {
             const errorMessage = generateProductErrorMessage(req.body);
             logger.error('Invalid product data provided.')
@@ -46,8 +46,8 @@ const createProduct = async (req, res, next) => {
                 code: EErrors.INVALID_TYPES_ERROR
             });
         }
+        let result = await productsService.addProduct({ title, description, code, price, status, stock, category, thumbnail, email });
         logger.info(`Product created successfully: ${title}`);
-        let result = await productsService.addProduct({ title, description, code, price, status, stock, category, thumbnail });
         return res.status(200).send( {result: "success", payload: result} )
     } catch (e) {
         logger.error('Error creando producto:', e);
@@ -73,8 +73,8 @@ const updateProduct = async(req, res) =>{
 const deleteProduct = async (req, res) => {
     try {
         let productId = req.params.pid
-        let result = await productsService.deleteProduct(productId)
         logger.info(`Product with id ${productId} deleted successfully.`);
+        let result = await productsService.deleteProduct(productId)
         res.status(200).send( {result: "success", payload: result} )
     } catch (e) {
         logger.error('Error al eliminar el producto:', e);
@@ -128,6 +128,7 @@ const generateMockingProducts = async (req, res) => {
         logger.error('Error generating mock products:', e);
         res.status(500).json({ status: 'error', payload: e.message });
     }
+
 }
 
 
