@@ -1,17 +1,20 @@
 import express from 'express';
 import handlebars from 'express-handlebars'
-import { Server } from 'socket.io'
-import mongoose from './config/config.js'
 import bodyParser from 'body-parser';
 import MongoStore from 'connect-mongo';
 import passport from 'passport';
 import session from 'express-session';
-import initializePassport  from './config/passport.config.js';
-import __dirname from './utils/dirname.js'
 import dotenv from 'dotenv'
+import path from 'path';
+import swaggerJsdoc from 'swagger-jsdoc'
+import swaggerUiExpress from 'swagger-ui-express'
+
+import initializePassport  from './config/passport.config.js';
+import mongoose from './config/config.js'
 import errorHandler from './middleware/errors/index.js'
 import logger from './utils/logger.js';
-import path from 'path';
+import __dirname from './utils/dirname.js'
+
 
 dotenv.config()
 
@@ -60,11 +63,18 @@ app.use('/api/sessions', sessionsRouter);
 app.use('/', mailRouter)
 app.use('/api/users', usersRouter);
 
-//* Websocket
-// socketServer.on('connection', async(socketClient) => {
-//     console.log("Cliente conectado") 
-// })
-
+const swaggerOptions = {
+    definition: {
+        openapi: '3.0.1',
+        info: {
+            title: 'Documentacion Ecommerce',
+            description: 'Documentacion detallada del ecommerce construido como proyecto final de BackEnd'
+        }
+    },
+    apis: [`${__dirname}/../docs/**/*.yaml`]
+}
+const specs = swaggerJsdoc(swaggerOptions);
+app.use('/apidocs', swaggerUiExpress.serve, swaggerUiExpress.setup(specs))
 
 app.listen(PORT, () => {
     logger.info(`Server is running on port ${PORT}`);

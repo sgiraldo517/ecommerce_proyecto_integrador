@@ -6,6 +6,7 @@ import logger from '../utils/logger.js'
 //! Import Controllers
 import productsControllers from '../controllers/products.controllers.js'
 import cartsControllers from '../controllers/carts.controllers.js'
+import usersControllers from '../controllers/users.controllers.js';
 
 const router = Router()
 
@@ -20,17 +21,12 @@ router.get('/register', isNotAuthenticated, (req, res) => {
     res.render('register')
 })
 
-router.get('/current', isAuthenticated, async(req, res) => {
-    const currentUser = await userService.getCurrentUser(req.session.user);
-    logger.http(`${req.method} request to ${req.url} - ${new Date().toLocaleTimeString()} - user details: req.session.user`);
-    res.render('current', { currentUser });
-});
+router.get('/current', isAuthenticated, usersControllers.getCurrentUser);
 
 router.get('/products', isAuthenticated, isUser, async (req, res) => {
     logger.http(`${req.method} request to ${req.url} - ${new Date().toLocaleTimeString()}`);
     const products = await productsControllers.paginateProducts(req, res);
-    const currentUser = await userService.getUserByEmail(req.session.user)
-    const currentCart = await userService.getUserCarrito(currentUser._id)
+    const currentCart = await usersControllers.getCurrentUserCart(req, res)
     res.render('products',  { products, cartId: currentCart });
 });
 
@@ -44,8 +40,7 @@ router.get('/addproduct', isAuthenticated, isAdminOrPremium, async (req, res) =>
 router.get('/carts', isAuthenticated, isUser, async (req, res) => {
     logger.http(`${req.method} request to ${req.url} - ${new Date().toLocaleTimeString()}`);
     const carts = await cartsControllers.paginateCart(req, res);
-    const currentUser = await userService.getUserByEmail(req.session.user)
-    const currentCart = await userService.getUserCarrito(currentUser._id)
+    const currentCart = await usersControllers.getCurrentUserCart(req, res)
     res.render('carts',  { carts, cartId: currentCart} );
 });
 

@@ -1,9 +1,16 @@
-import { productsService } from "../repositories/index.js";
-import { generateProducts } from "../utils/mocking.js";
+//!Error handling
+import logger from '../utils/logger.js';
 import CustomError from '../services/errors/CustomError.js'
 import EErrors from "../services/errors/enums.js";
 import { generateProductErrorMessage } from "../services/errors/info.js";
-import logger from '../utils/logger.js';
+
+//! Import Services
+import { productsService } from "../repositories/index.js";
+
+//! Import Mocking functions
+import { generateProducts } from "../utils/mocking.js";
+
+
 
 const getProducts = async (req, res) => {
     try {
@@ -45,12 +52,14 @@ const createProduct = async (req, res, next) => {
                 message: 'Product data is invalid',
                 code: EErrors.INVALID_TYPES_ERROR
             });
+            res.status(400).send( {status: "error", result: "Invalid product data"} )
         }
         let result = await productsService.addProduct({ title, description, code, price, status, stock, category, thumbnail, email });
         logger.info(`Product created successfully: ${title}`);
         return res.status(200).send( {result: "success", payload: result} )
     } catch (e) {
         logger.error('Error creando producto:', e);
+        res.status(500).send( {status: "error", result: "Serve error while creating product"} )
         next(e);
     }
 }

@@ -1,9 +1,16 @@
 import passport from "passport";
 import local from 'passport-local';
 import GitHubStrategy from "passport-github2";
-import { isValidPassword } from "../utils/password.js";
-import { userService } from '../repositories/index.js';
+
+//! Error handling
 import logger from '../utils/logger.js'; 
+
+//! Import Password functions
+import { isValidPassword } from "../utils/password.js";
+
+//! Import User Services
+import { userService } from '../repositories/index.js';
+
 
 const LocalStrategy = local.Strategy;
 

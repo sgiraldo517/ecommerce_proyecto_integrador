@@ -1,0 +1,114 @@
+paths:
+  /api/carts:
+    post:
+      summary: Create a new cart
+      tags:
+        - Carts
+      responses:
+        '200':
+          description: Cart created successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Cart'
+        '500':
+          description: Internal server error
+
+  /api/carts/{cid}/product/{pid}:
+    post:
+      summary: Add product to cart
+      tags:
+        - Carts
+      parameters:
+        - in: path
+          name: cid
+          schema:
+            type: string
+          required: true
+          description: ID of the cart
+        - in: path
+          name: pid
+          schema:
+            type: string
+          required: true
+          description: ID of the product
+      responses:
+        '200':
+          description: Product added to cart successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Cart'
+        '404':
+          description: Cart not found
+        '500':
+          description: Internal server error
+
+  /api/carts/{cid}:
+    get:
+      summary: Get cart by ID
+      tags:
+        - Carts
+      parameters:
+        - in: path
+          name: cid
+          schema:
+            type: string
+          required: true
+          description: ID of the cart
+      responses:
+        '200':
+          description: Cart retrieved successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Cart'
+        '404':
+          description: Cart not found
+        '500':
+          description: Internal server error
+
+  /api/carts/{cid}/purchase:
+    get:
+      summary: Complete purchase of a cart
+      tags:
+        - Carts
+      parameters:
+        - in: path
+          name: cid
+          schema:
+            type: string
+          required: true
+          description: ID of the cart
+      responses:
+        '200':
+          description: Purchase completed successfully
+        '404':
+          description: Cart not found
+        '500':
+          description: Internal server error
+
+components:
+  schemas:
+    Cart:
+      type: object
+      properties:
+        _id:
+          type: ObjectId
+          description: The unique identifier of the cart
+        products:
+          type: array
+          items:
+            type: object
+            properties:
+              product:
+                type: ObjectId
+                description: The ID of the product
+              quantity:
+                type: integer
+                description: Quantity of the product in the cart
+      example:
+        _id: "64b5e255f1e6d2a7b1a231ca"
+        products:
+          - product: "64b5e234a2c3f2a9d1e13b99"
+            quantity: 2
