@@ -13,14 +13,14 @@ const updateUserRole = async (req, res) => {
         logger.info('Updating user role for user ' + userId)
         let user = await userService.getUserById(userId)
         if (!user) {
-            logger.error(`User ${userId} not found`)
+            logger.error(`User not found`)
         }
         let role = user.role == 'premium' ? 'user' : 'premium'
         let result = await userService.updateUserRole(userId, role)
         logger.info(`Role for user ${userId} was succefully updated to ${role}`)
-        res.status(200).json({ status: "sucess", result: result })
+        res.redirect(req.get('referer'))
     } catch (error) {
-        logger.error(`Error updating user role for user ${userId} ` + error.message)
+        logger.error(`Error updating user ` + error.message)
     }
 }
 
@@ -66,10 +66,26 @@ const getCurrentUserCart = async (req, res) => {
     return result
 }
 
+const getAllUsers = async (req, res) => {
+    try {
+        let result = await userService.getAllUsers()
+        logger.info('Fetched all users successfully.')
+        return res.render('users', { result })
+    } catch (error) {
+        logger.error('Error fetching all users:', error);
+        res.status(500).send( "Error fetching all users: " + error.message);
+    }
+}
+
+const deleteUsers = async (params) => {
+    
+}
 
 export default {
     updateUserRole,
     updateUserPassword,
     getCurrentUser,
-    getCurrentUserCart
+    getCurrentUserCart,
+    getAllUsers,
+    deleteUsers
 }

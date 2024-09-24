@@ -1,0 +1,40 @@
+<div>
+    <nav class="navbar bg-dark border-bottom border-body" data-bs-theme="dark">
+        <ul class="nav nav-underline m-3">
+            <li class="nav-item">
+                <a class="nav-link" href="/current">Ver perfil</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="/products">Productos</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="/carts">Carrito</a>
+            </li>
+        </ul>
+    </nav>
+    <h1 class="text-center py-4">Users</h1>
+    <div class="container">
+        <div class="row">
+            {{#each result}}
+                <div class="col-md-4 mb-4"> 
+                    <div class="card h-100"> 
+                        <div class="card-body">
+                            <p><span class="small fst-italic text-black-50">Nombre: </span>{{this.first_name}} </p>
+                            <p><span class="small fst-italic text-black-50">Apellido: </span>{{this.last_name}}</p>
+                            <p><span class="small fst-italic text-black-50">Correo: </span>{{this.email}}</p>
+                            <p><span class="small fst-italic text-black-50">Role: </span>{{this.role}}</p>
+                            <form action="/api/users/premium/{{this._id}}" method="GET" onsubmit="return confirm('Esta seguro que quiere modificar el role del usuario?');">
+                                <button type="submit" class="btn btn-primary">Modificar Role</button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            {{/each}}
+        </div>
+    </div>
+    <div class="d-flex justify-content-center align-items-center m-5">
+        <form action="/api/users/" method="GET">
+            <button type="submit" class="btn btn-danger">Delete Inactive</button>
+        </form>
+    </div>
+</div>

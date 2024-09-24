@@ -45,6 +45,10 @@ class Users {
         return updatedProduct
     }
 
+    getAllUsers = async () => {
+        const users = await userModel.find().lean()
+        return users
+    }
 }
 
 export default Users

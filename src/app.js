@@ -20,13 +20,10 @@ dotenv.config()
 
 const app = express()
 const PORT = 8080
-// const httpServer = app.listen(PORT, console.log(`Server running on port ${PORT}`));
-// const socketServer = new Server(httpServer)
 
 //! Importar rutas
 import productsRouter from './routes/products.router.js'
 import cartsRouter from './routes/carts.router.js'
-import messagesRouter from './routes/messages.router.js'
 import viewsRouter from './routes/views.router.js'
 import sessionsRouter from './routes/api/sessions.js'
 import mailRouter from './routes/mail.router.js'
@@ -57,7 +54,6 @@ app.use(errorHandler)
 
 app.use('/api/products/', productsRouter)
 app.use('/api/carts/', cartsRouter)
-app.use('/', messagesRouter)
 app.use('/', viewsRouter)
 app.use('/api/sessions', sessionsRouter);
 app.use('/', mailRouter)

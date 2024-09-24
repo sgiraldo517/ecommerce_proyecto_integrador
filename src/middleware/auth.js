@@ -39,3 +39,13 @@ export const isUser = (req, res, next) => {
         res.status(403).send("Access denied: Users only");
     }
 };
+
+export const isAdmin = (req, res, next) => {
+    if (req.user && req.user.role === 'admin') {
+        logger.info(`User ${req.user.email} accessed sucessfully an admin area.`);
+        return next();
+    } else {
+        logger.warn(`Access denied: User ${req.user ? req.user.email : 'Unknown'} attempted to access an admin-only area.`);
+        res.status(403).send("Access denied: Admins only");
+    }
+};

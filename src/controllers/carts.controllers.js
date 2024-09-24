@@ -28,7 +28,7 @@ const addProductToCart = async (req, res) => {
         }
         let result = await cartsService.addProductToCart(cart, productId)
         logger.info(`Product ${productId} added successfullyto cart: ${cartId}`)
-        return res.status(200).send({ result: "success", payload: result });
+        return res.redirect(req.get('referer'));
     } catch (e) {
         logger.error("Error updating cart:", e);
         res.status(500).send("Error updating cart: " + e.message);
@@ -128,15 +128,15 @@ const endPurchase = async (req, res) => {
         await ticketsService.createNewTicket({ code: code, amount: amount, purchaser: purchaser })
         if(unprocessedProducts.length > 0) {
             logger.info("Purchase completed with some items unprocessed due to insufficient stock");
-            res.status(200).json({ result: "success", message: "Some items were not processed due to missing stock " + unprocessedProducts });
+            res.status(200).send("<script>alert('Compra completada con algunos items no procesados debido a stock insuficiente.'); window.location.href='/carts';</script>");
         } else {
             logger.info("Purchase completed successfully");
-            res.status(200).json({ result: "success", message: "Purchase completed successfully" });
+            res.status(200).send("<script>alert('Compra completada exitosamente.'); window.location.href='/carts';</script>");
         }
 
     } catch (e) {
         logger.error("Error processing purchase:", e);
-        res.status(500).send("Error al procesar la compra: " + e.message);
+        res.status(500).send("<script>alert('Error al procesar la compra: " + e.message + "'); window.location.href='/carts';</script>");
     }
 };
 
