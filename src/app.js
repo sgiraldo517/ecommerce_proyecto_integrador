@@ -19,7 +19,7 @@ import __dirname from './utils/dirname.js'
 dotenv.config()
 
 const app = express()
-const PORT = process.env.PORT || 8080
+const PORT = 8080
 
 //! Importar rutas
 import productsRouter from './routes/products.router.js'
