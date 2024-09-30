@@ -50,6 +50,11 @@ class UserRepositories{
         return result
     }
 
+    deleteInactiveUsers = async () => {
+        let result = await this.dao.deleteInactiveUsers()
+        return result
+    }
+
 }
 
 export default UserRepositories

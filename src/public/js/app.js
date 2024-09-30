@@ -50,3 +50,31 @@ function addProductToCart(cartId, productId, title) {
         alert('Error al añadir el producto al carrito');
     });
 }
+
+
+function deleteUsers() {
+    if (!confirm('¿Esta seguro que quiere eliminar a los usuarios Inactivos?')) {
+        return; 
+    }
+
+    fetch(`/api/users/`, {
+        method: 'DELETE',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+    })
+    .then(response => {
+        if (!response.ok) {
+            throw new Error('Error al eliminar usuarios inactivos');
+        }
+        return response.json(); 
+    })
+    .then(data => {
+        alert(data.message);
+        location.reload();
+    })
+    .catch(error => {
+        console.error('Error:', error);
+        alert(error.message);
+    });
+}

@@ -6,11 +6,13 @@ import { generateProductErrorMessage } from "../services/errors/info.js";
 
 //! Import Services
 import { productsService } from "../repositories/index.js";
+import { userService } from '../repositories/index.js';
 
 //! Import Mocking functions
 import { generateProducts } from "../utils/mocking.js";
 
-
+//! Import MailService
+import { transport } from '../utils/mailing.js';
 
 const getProducts = async (req, res) => {
     try {
@@ -82,8 +84,34 @@ const updateProduct = async(req, res) =>{
 const deleteProduct = async (req, res) => {
     try {
         let productId = req.params.pid
-        logger.info(`Product with id ${productId} deleted successfully.`);
         let result = await productsService.deleteProduct(productId)
+        logger.info(`Product owner information ${result}`);
+        logger.info(`Product with id ${productId} deleted successfully.`);
+        try {
+            if (result.user == null) {
+                logger.info('No email notification required');
+            } else {
+                logger.info('User is premium, email notification in progress');
+                let premiumUserId = result.user.toString();
+                let premiumUser = await userService.getUserById(premiumUserId)
+                let email = premiumUser.email
+                logger.info('Notification will be send to user: ' + email);
+                let message = {
+                    from: 'Coder Ecommerce <s.giraldo517@gmail.com>',
+                    to: `${email}`,
+                    subject: 'Alerta: Uno de tus productos se elimino',
+                    html: `
+                    <div>
+                        <h1>Producto Eliminado</h1>
+                        <p>Uno de los preductos que creaste fue eliminado de la base de datos.</p>
+                    </div>
+                    `
+                }
+                transport.sendMail(message)
+            }
+        } catch (error) {
+            logger.error('Error sending email notification', error);
+        }
         res.status(200).send( {result: "success", payload: result} )
     } catch (e) {
         logger.error('Error al eliminar el producto:', e);

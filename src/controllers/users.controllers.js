@@ -7,6 +7,9 @@ import { userService } from '../repositories/index.js'
 //! Import Password Utils
 import { createHash, isValidPassword } from '../utils/password.js';
 
+//! Import MailService
+import { transport } from '../utils/mailing.js';
+
 const updateUserRole = async (req, res) => {
     try {
         let userId = req.params.uid
@@ -77,8 +80,37 @@ const getAllUsers = async (req, res) => {
     }
 }
 
-const deleteUsers = async (params) => {
-    
+const deleteUsers = async (req, res) => {
+    try {
+        let result = await userService.deleteInactiveUsers()
+        logger.info(`${result.deletedCount} inactive users were deleted successfully.`)
+        res.status(200).send({ message: `${result.deletedCount} inactive users were deleted successfully.` });
+        try {
+            let deletedaccounts = result.deletedEmails
+            logger.info(`The following users will receive an email: ${deletedaccounts}`)
+            deletedaccounts.forEach(email => {
+                let message = {
+                    from: 'Coder Ecommerce <s.giraldo517@gmail.com>',
+                    to: `${email}`,
+                    subject: 'Tu cuenta fue eliminada',
+                    html: `
+                    <div>
+                        <h1>Cuenta Elimianda</h1>
+                        <p>Tu cuenta fue eliminada por inactividad. Si quieres recuperar tu cuenta debes volver a hacer el registro.</p>
+                        <p>Recuerda que las cuentas son eliminadas despues de 2 dias de inactividad para evitar que tu cuenta sea eliminada, recuerda loguearte antes de este periodo.</p>
+                    </div>
+                    `
+                }
+                transport.sendMail(message)
+            });
+            logger.info(`Email for deleted account was sent successfully`)
+        } catch (error) {
+            logger.error(`Error attempting to send mail: ${error.message}`)
+        }
+    } catch (error) {
+        logger.error('Error deleting Inactive Users:', error);
+        res.status(500).send( "Error deleting Inactive Users: " + error.message);
+    }
 }
 
 export default {

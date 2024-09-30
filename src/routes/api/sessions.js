@@ -22,6 +22,11 @@ router.post('/login', passport.authenticate('login', { failureRedirect: 'faillog
         return res.status(400).send({ status: 'error', error: 'Credenciales invalidas'})
     }
     try {
+        if(req.user.role != 'admin') { 
+        req.user.lastLogin = new Date();
+        await req.user.save();
+        }
+        
         req.session.user = {
             first_name: req.user.first_name,
             last_name: req.user.last_name,
@@ -49,6 +54,9 @@ router.get('/github', passport.authenticate('github', { scope: ['user.email']}),
 
 router.get('/githubcallback', passport.authenticate('github', { failureRedirect:'/login' }), async (req, res) => {
     logger.http(`${req.method} request to ${req.url} - ${new Date().toLocaleTimeString()}`);
+    req.user.lastLogin = new Date();
+    await req.user.save();
+    
     req.session.user = req.user;
     res.redirect('/current');
 })

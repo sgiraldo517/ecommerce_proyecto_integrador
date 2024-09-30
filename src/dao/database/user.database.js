@@ -1,5 +1,6 @@
 import { createHash } from "../../utils/password.js";
 import { cartsService } from "../../repositories/index.js";
+
 //! Import Models
 import userModel from '../database/models/user.model.js'
 import cartsModel from '../database/models/carts.model.js';
@@ -49,6 +50,18 @@ class Users {
         const users = await userModel.find().lean()
         return users
     }
+
+    deleteInactiveUsers = async () => {
+        const twoDaysFromNow = new Date(Date.now() - 2 * 24 * 60 * 60 * 1000);
+        const inactiveUsers = await userModel.find({ lastLogin: { $lt: twoDaysFromNow } });
+        const deletedEmails = inactiveUsers.map(user => user.email)
+        const deleteUsers = await userModel.deleteMany({ lastLogin: { $lt: twoDaysFromNow } });
+        return {
+            deletedCount: deleteUsers.deletedCount,
+            deletedEmails: deletedEmails
+        };
+    }
+
 }
 
 export default Users

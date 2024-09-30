@@ -26,8 +26,11 @@ class Products {
     }
 
     deleteProduct = async (productId) => {
-        await productsModel.findByIdAndDelete(productId)
-        return 
+        const deletedProduct = await productsModel.findByIdAndDelete(productId).select('owner'); 
+        if (!deletedProduct) {
+            return null;  
+        }
+        return deletedProduct.owner; 
     }    
 
     paginateProducts = async (query, options) => {

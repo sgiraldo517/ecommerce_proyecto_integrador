@@ -13,7 +13,7 @@ router.get('/premium/:uid', userControllers.updateUserRole)
 
 router.post('/reset-password', userControllers.updateUserPassword);
 
-router.delete('/', userControllers.deleteUsers)
+router.delete('/', isAdmin, userControllers.deleteUsers)
 
 
 export default router

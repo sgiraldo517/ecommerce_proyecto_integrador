@@ -33,6 +33,4 @@ router.post('/mail', async(req, res) => {
     }
 })
 
-
-
 export default router
