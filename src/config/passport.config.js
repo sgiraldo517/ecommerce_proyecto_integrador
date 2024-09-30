@@ -69,10 +69,11 @@ const initializePassport = () => {
         }
     ));
 
+    const callbackURL = process.env.ENV === 'production' ? process.env.CALLBACKURL : 'http://localhost:8080/api/sessions/githubcallback';
     passport.use('github', new GitHubStrategy({
         clientID: 'Iv23lifl6cZGRp9dfGNI',
         clientSecret: '85d5dbaa8b24d98a056f4ad002ab6aa45976484f',
-        callbackURL: process.env.CALLBACKURL || 'http://localhost:8080/api/sessions/githubcallback'
+        callbackURL: callbackURL 
     }, async (accessToken, refreshToken, profile, done) => {
         try {
             let user = await userService.getUserByEmail({ email: profile._json.email });
